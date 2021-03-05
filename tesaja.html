@@ -1,0 +1,40 @@
+ 
+<script src="hhmac-sha512.js"></script>
+<script src="key.js"></script>
+
+<!-- include key.js -->
+<!-- var screet = ' ';  -->
+<!-- var  key = ' ';  -->
+ 
+<script type="text/javascript">
+	
+var nonce=Math.floor(Date.now() / 1000);
+var post ='method=getInfo&nonce='+nonce;
+var sha512screet = CryptoJS.HmacSHA512(post, screet);
+ 
+ const uri = 'https://indodax.com/tapi/';
+ let h = new Headers(); 
+ h.append('Content-Type','application/x-www-form-urlencoded'); 
+h.append('Sign', sha512screet)
+h.append('Key', key) 
+let req = new Request(uri, {
+    method: 'POST',
+    headers: h,
+    body: post,
+});
+fetch(req)
+    .then( (response)=>{
+        if(response.ok){
+            return response.json();
+        }else{
+            throw new Error('gagal');
+        }
+    })
+    .then( (jsonData) =>{
+        console.log(jsonData);
+		 
+    })
+    .catch( (err) =>{
+        console.log('error:', err.message);
+    });
+    </script>
